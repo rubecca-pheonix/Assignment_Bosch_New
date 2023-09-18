@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Assignment_Bosch.Services;
+using Azure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Assignment_Bosch.Middlewares
@@ -25,15 +26,23 @@ namespace Assignment_Bosch.Middlewares
             var auditService = serviceProvider.GetRequiredService<AuditService>();
             auditService.SaveAudit(correlationId, request, "Request");
 
-            await using var responseBody = new MemoryStream();
-            context.Response.Body = responseBody;   
+            var orginalResponseBody = context.Response.Body;
+            using (var responseBody = new MemoryStream())
+            {
+                context.Response.Body = responseBody;
+                await _next(context);
+                //read the response stream from the beginning
+                responseBody.Seek(0, SeekOrigin.Begin);
 
-            await _next(context);
+                var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
+                auditService.SaveAudit(correlationId, responseText, "Response");
 
-            var response = await GetResponseAsTextAsync(context.Response);
-            auditService.SaveAudit(correlationId, request, "Response");
+                responseBody.Seek(0, SeekOrigin.Begin);
 
-            await responseBody.CopyToAsync(originalBodyStream);
+                //Copy the contents of the new memory stream
+                await responseBody.CopyToAsync(originalBodyStream);
+            }
+
         }
 
         private async Task<string> GetRequestAsTextAsync(HttpRequest request)
@@ -52,14 +61,7 @@ namespace Assignment_Bosch.Middlewares
             return $"{request.Scheme} {request.Host}{request.Path} {request.QueryString} {bodyAsText}";
         }
 
-        private async Task<string> GetResponseAsTextAsync(HttpResponse response)
-        {
-            response.Body.Seek(0, SeekOrigin.Begin);
-            var text = await new StreamReader(response.Body).ReadToEndAsync();
-            response.Body.Seek(0, SeekOrigin.Begin);
-
-            return text;
-        }
+        
     }
 }
 

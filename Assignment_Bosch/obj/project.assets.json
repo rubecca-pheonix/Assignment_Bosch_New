@@ -3472,11 +3472,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/rubeccaansari/New_Assignment_Bosch/Assignment_Bosch/Assignment_Bosch.csproj",
+      "projectUniqueName": "/Users/rubeccaansari/Assignment_Bosch_New/Assignment_Bosch/Assignment_Bosch.csproj",
       "projectName": "Assignment_Bosch",
-      "projectPath": "/Users/rubeccaansari/New_Assignment_Bosch/Assignment_Bosch/Assignment_Bosch.csproj",
+      "projectPath": "/Users/rubeccaansari/Assignment_Bosch_New/Assignment_Bosch/Assignment_Bosch.csproj",
       "packagesPath": "/Users/rubeccaansari/.nuget/packages/",
-      "outputPath": "/Users/rubeccaansari/New_Assignment_Bosch/Assignment_Bosch/obj/",
+      "outputPath": "/Users/rubeccaansari/Assignment_Bosch_New/Assignment_Bosch/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/rubeccaansari/.nuget/NuGet/NuGet.Config"

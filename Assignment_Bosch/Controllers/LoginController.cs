@@ -38,12 +38,12 @@ public class LoginController : ControllerBase
             // Publish the username to the broker and send the OTP
             _messagePublisher.SendMessage(new LoginNotificationMessage { Username = username });
 
-            return Ok();
+            return Ok("User Logged In");
         }
         catch(Exception ex)
         {
             _logger.LogError(ex.Message);
-            return StatusCode(500);
+            return StatusCode(500, "Internal seever error");
         }
     }
 }
